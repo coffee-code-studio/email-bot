@@ -18,7 +18,7 @@ use redis::RedisError;
 use askama::Error as AskamaError;
 
 #[derive(Error, Debug)]
-pub enum MyError {
+pub enum BotError {
     #[error("Network error: {0}")]
     NetworkError(#[from] reqwest::Error),
 
@@ -64,7 +64,7 @@ fn current_day() -> String {
     Utc::now().format("%Y-%m-%d").to_string()
 }
 
-fn check_and_update_email_count(con: &mut redis::Connection, max_emails_per_day: usize) -> Result<bool, MyError> {
+fn check_update_email_count(con: &mut redis::Connection, max_emails_per_day: usize) -> Result<bool, BotError> {
     let today = current_day();
     let key = format!("emails_sent:{}", today);
     let mut retry_count = 0;
@@ -75,9 +75,9 @@ fn check_and_update_email_count(con: &mut redis::Connection, max_emails_per_day:
             Ok(count) => {
                 let count: isize = count;
                 if count < max_emails_per_day as isize {
-                    let _: () = con.incr(&key, 1).map_err(MyError::RedisError)?;
+                    let _: () = con.incr(&key, 1).map_err(BotError::RedisError)?;
                     if count == 0 {
-                        let _: () = con.expire(&key, 86400).map_err(MyError::RedisError)?;
+                        let _: () = con.expire(&key, 86400).map_err(BotError::RedisError)?;
                     }
                     return Ok(true);
                 } else {
@@ -86,7 +86,7 @@ fn check_and_update_email_count(con: &mut redis::Connection, max_emails_per_day:
             },
             Err(err) => {
                 if retry_count >= max_retries {
-                    return Err(MyError::RedisError(err));
+                    return Err(BotError::RedisError(err));
                 } else {
                     eprintln!("Redis failed, retrying... (Attempt: {})", retry_count + 1);
                     retry_count += 1;
@@ -98,15 +98,15 @@ fn check_and_update_email_count(con: &mut redis::Connection, max_emails_per_day:
 }
 
 #[tokio::main]
-async fn main() -> Result<(), MyError> {
+async fn main() -> Result<(), BotError> {
     let client = reqwest::Client::new();
     let mut page_number = 1;
     let mut has_more_pages = true;
     let mut businesses: Vec<Business> = Vec::new();
 
     // Establish Redis connection
-    let redis_client = redis::Client::open("redis://127.0.0.1/").map_err(MyError::RedisError)?;
-    let mut redis_con = redis_client.get_connection().map_err(MyError::RedisError)?;
+    let redis_client = redis::Client::open("redis://127.0.0.1/").map_err(BotError::RedisError)?;
+    let mut redis_con = redis_client.get_connection().map_err(BotError::RedisError)?;
 
     let max_emails_per_day = 400;
 
@@ -119,10 +119,10 @@ async fn main() -> Result<(), MyError> {
         let list_page_response = client.get(&list_page_url)
             .send()
             .await
-            .map_err(MyError::NetworkError)?
+            .map_err(BotError::NetworkError)?
             .text()
             .await
-            .map_err(MyError::NetworkError)?;
+            .map_err(BotError::NetworkError)?;
         
         let list_page_document = Html::parse_document(&list_page_response);
         let business_link_selector = Selector::parse("a.business-name").unwrap();
@@ -145,10 +145,10 @@ async fn main() -> Result<(), MyError> {
                 let detail_page_response = client.get(&detail_url)
                     .send()
                     .await
-                    .map_err(MyError::NetworkError)?
+                    .map_err(BotError::NetworkError)?
                     .text()
                     .await
-                    .map_err(MyError::NetworkError)?;
+                    .map_err(BotError::NetworkError)?;
                 
                 let detail_page_document = Html::parse_document(&detail_page_response);
                 let email_selector = Selector::parse("a.email-business").unwrap();
@@ -171,9 +171,9 @@ async fn main() -> Result<(), MyError> {
         page_number += 1;
     }
 
-    let json_data = serde_json::to_string_pretty(&businesses).map_err(MyError::DataParseError)?;
-    let mut file = File::create("business_emails.json").map_err(MyError::IOError)?;
-    file.write_all(json_data.as_bytes()).map_err(MyError::IOError)?;
+    let json_data = serde_json::to_string_pretty(&businesses).map_err(BotError::DataParseError)?;
+    let mut file = File::create("business_emails.json").map_err(BotError::IOError)?;
+    file.write_all(json_data.as_bytes()).map_err(BotError::IOError)?;
 
     let email_sender = "coffeecodestudio.dev@gmail.com";
     let creds = Credentials::new(email_sender.to_string(), "<add password>".to_string());
@@ -193,7 +193,7 @@ async fn main() -> Result<(), MyError> {
         website_url,
     };
 
-    let email_content = email_template.render().map_err(MyError::TemplateError)?;
+    let email_content = email_template.render().map_err(BotError::TemplateError)?;
 
     for business in &businesses {
         if !business.email.contains('@') {
@@ -201,13 +201,13 @@ async fn main() -> Result<(), MyError> {
             continue;
         }
 
-        if check_and_update_email_count(&mut redis_con, max_emails_per_day)? {
+        if check_update_email_count(&mut redis_con, max_emails_per_day)? {
             let email = Message::builder()
                 .from(email_sender.parse().unwrap())
                 .to(business.email.parse().unwrap())
                 .subject(&subject)
                 .body(email_content.clone())
-                .map_err(MyError::EmailError)?;
+                .map_err(BotError::EmailError)?;
 
             match mailer.send(&email) {
                 Ok(_) => println!("Email sent successfully to: {}", business.email),
