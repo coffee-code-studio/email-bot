@@ -2,6 +2,8 @@ use std::fs::File;
 use std::io::Write;
 use std::io;
 use std::collections::HashSet;
+use std::env;
+use dotenvy::dotenv;
 use reqwest;
 use regex::Regex;
 use scraper::{Html, Selector};
@@ -191,8 +193,11 @@ async fn main() -> Result<(), BotError> {
     let mut file = File::create("business_emails.json").map_err(BotError::IOError)?;
     file.write_all(json_data.as_bytes()).map_err(BotError::IOError)?;
 
+    dotenv().expect(".env file not found");
+
     let email_sender = "coffeecodestudio.dev@gmail.com";
-    let creds = Credentials::new(email_sender.to_string(), "<pasword>".to_string());
+    let email_password = env::var("EMAIL_PASSWORD").expect("EMAIL_PASSWORD not set");
+    let creds = Credentials::new(email_sender.to_string(), email_password);
     let mailer = SmtpTransport::relay("smtp.gmail.com")?.credentials(creds).build();
     
     let subject = "Grow Your Business with Coffee Code Studio - Special Offer Inside!".to_string();
