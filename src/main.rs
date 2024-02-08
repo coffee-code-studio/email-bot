@@ -82,7 +82,6 @@ fn check_update_email_count(con: &mut redis::Connection, max_emails_per_day: usi
                 }
             },
             Ok(None) => {
-                // Key does not exist, so we treat it as 0 and attempt to set it to 1 and add an expiration
                 let _: () = con.set(&key, 1).map_err(BotError::RedisError)?;
                 let _: () = con.expire(&key, 86400).map_err(BotError::RedisError)?;
                 return Ok(true);
@@ -93,7 +92,7 @@ fn check_update_email_count(con: &mut redis::Connection, max_emails_per_day: usi
                 } else {
                     eprintln!("Redis failed, retrying... (Attempt: {})", retry_count + 1);
                     retry_count += 1;
-                    thread::sleep(Duration::from_millis(500)); // Wait for 500 ms before retrying
+                    thread::sleep(Duration::from_millis(500));
                 }
             }
         }
