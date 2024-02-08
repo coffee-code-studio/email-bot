@@ -1,39 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ subject }}</title>
-
+    <title>Special Offer from Coffee Code Studio</title>
     <style>
-        /* add styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        color: #2a2a2a;
+        margin: 0;
+        padding: 20px;
+        background-color: #f9fafb;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    h1, h2 {
+        background-color: #86efac;
+        color: #2a2a2a !important;
+    }
+    h2 {
+        padding-left: 10px;
+    }
+    p {
+        line-height: 1.6;
+    }
+    ul {
+        padding-left: 20px;
+    }
+    a {
+        color: #3b82f6;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    .footer {
+        font-size: 0.9em;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .offer {
+        color: #ef4444;
+        font-weight: bold;
+    }
+
+    /* Dark mode styles */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #1a1a1a;
+            color: #c6d4df;
+        }
+        .container {
+            background-color: #2a2a2a;
+            box-shadow: 0 4px 8px 0 rgba(255,255,255,0.1);
+            border: 1px solid #3d3d3d;
+        }
+        h1 {
+            text-align: center;
+        }
+        h1, h2 {
+            background-color: #86efac;
+            color: #2a2a2a !important;
+        }
+        h2 {
+            padding-left: 10px;
+        }
+        a {
+            color: #8ab4f8;
+        }
+        .offer {
+            color: #ff7b72;
+        }
+    }
     </style>
 </head>
 <body>
-    <h2>Dear Business Owner,</h2>
-
-    <p>As a fellow member of the Central Ohio community, we at Coffee Code Studio are passionate about our mission to grow small businesses' online presence. We believe that the heartbeat of our community lies within the vibrant tapestry of small businesses like yours, each with its unique story and value.</p>
-
-    <p>In today's digital age, your online presence is more than just a website; it's the digital storefront of your brand, the first handshake with your potential customers. We understand the challenges and constraints that small businesses face, and that's why we're dedicated to crafting bespoke web solutions that are not only visually stunning but also affordable and effective.</p>
-
-    <p>To support our local business community, we are thrilled to announce a special offer exclusively for Central Ohio businesses. For a limited time, we're offering our bespoke web design services at a flat rate of $200! It's our way of giving back to the community that has nurtured us and helping your business bloom in the digital realm.</p>
-
-    <p>What you can expect from us:</p>
-    <ul>
-        <li>Customized Design: Your business is unique, and your website should be too. We'll create a website that reflects your brand's personality and values.</li>
-        <li>Mobile Optimization: With more people browsing on their phones, we ensure your site looks great and functions seamlessly on all devices.</li>
-        <li>SEO Best Practices: We build your site with search engine optimization in mind, to help your business climb the ranks in Google search results.</li>
-    </ul>
-
-    <p>This offer is not just about building a website; it's about creating a partnership where we support your growth and help you connect with your customers in meaningful ways.</p>
-
-    <p>Let's make your digital dreams a reality. If you're interested in taking advantage of this exclusive offer or have any questions, please don't hesitate to reach out. Our team is excited to work with you and see your business flourish online.</p>
-
-    <p>Warm regards,</p>
-    <p>{{ name }}</p>
-    <p>{{ position }}</p>
-    <p>Coffee Code Studio</p>
-    <p>{{ contact_information }}</p>
-    <p>{{ website_url }}</p>
-
-    <p>P.S. This special $200 offer is available for a limited time only, so let's get started on this exciting journey together!</p>
+    <div class="container">
+        <h1>Coffee Code Studio</h1>
+        <p>Hi there,</p>
+        <p>In today's connected world, elevating your digital footprint is more important than ever. It's essential for businesses to not only navigate but truly thrive in the digital landscape.</p>
+        <p>This is why, at Coffee Code Studio, we help businesses create and enhance their own unique presence online by developing customized, user-friendly websites tailored to meet your specific needs.</p>
+        <p>As fellow members of the Central Ohio community, we at Coffee Code Studio are passionate about our mission to grow small businesses' online presence. We believe that the heartbeat of our community lies within the vibrant network of small businesses like yours, each with its own unique story and value.</p>
+        <p>In today's digital age, your online presence is more than just a website; it's the digital storefront of your brand, the first handshake with your potential customers. We understand the challenges and constraints that small businesses face, and that's why we're dedicated to crafting bespoke web solutions that are not only visually stunning but also affordable and effective.</p>
+        <p>To support our local business community, we are thrilled to announce a special offer exclusively for Central Ohio businesses. For a limited time, we're offering our web design services at a flat rate of $200! It's our way of giving back to the community that has nurtured us by helping your businesses bloom in the digital realm.</p>
+        <h2>What you can expect from us:</h2>
+        <ul>
+            <li><strong>Customized Design:</strong> Your business is unique, and your website should be too. We'll create a website that reflects your brand's personality and values.</li>
+            <li><strong>Mobile Optimization:</strong> With more people browsing on their phones, we ensure your site looks great and functions seamlessly on all devices.</li>
+            <li><strong>SEO Best Practices:</strong> We build your site with search engine optimization in mind, to help your business climb the ranks in Google search results.</li>
+        </ul>
+        <p>This offer is not just about building a website; it's about creating a partnership where we support your growth and help you connect with your customers in meaningful ways.</p>
+        <p>Let's make your digital dreams a reality. If you're interested in taking advantage of this exclusive offer or have any questions, please don't hesitate to reach out. Our team is excited to work with you and see your business flourish online.</p>
+        <p class="footer">
+            Warm regards,<br>
+            Tim Reed<br>
+            Lead Developer<br>
+            Coffee Code Studio<br>
+            <a href="mailto:coffeecodestudio.dev@gmail.com">coffeecodestudio.dev@gmail.com</a><br>
+            <a href="https://coffeecodestudio.com/">https://coffeecodestudio.com/</a>
+        </p>
+        <p class="offer"><strong>This special $200 offer is available for a limited time only, so let's get started on this exciting journey together!</strong></p>
+    </div>
 </body>
 </html>
+
