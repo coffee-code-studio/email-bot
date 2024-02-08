@@ -115,7 +115,7 @@ async fn main() -> Result<(), BotError> {
 
     while has_more_pages {
         let list_page_url = format!(
-            "https://www.yellowpages.com/search?search_terms=Landscaping+%26+Lawn+Services&geo_location_terms=Columbus%2C+OH&page={}",
+            "https://www.yellowpages.com/search?search_terms=Electricians&geo_location_terms=Columbus%2C+OH&page={}",
             page_number
         );
 
@@ -192,7 +192,7 @@ async fn main() -> Result<(), BotError> {
     file.write_all(json_data.as_bytes()).map_err(BotError::IOError)?;
 
     let email_sender = "coffeecodestudio.dev@gmail.com";
-    let creds = Credentials::new(email_sender.to_string(), "mquh ggvs flcn bilf".to_string());
+    let creds = Credentials::new(email_sender.to_string(), "<pasword>".to_string());
     let mailer = SmtpTransport::relay("smtp.gmail.com")?.credentials(creds).build();
     
     let subject = "Grow Your Business with Coffee Code Studio - Special Offer Inside!".to_string();
